@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:notes_app/services/auth/auth_service.dart';
 import '../constants/routes.dart';
-import '../firebase_options.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});
@@ -14,9 +12,6 @@ class VerifyEmailView extends StatefulWidget {
 class _VerifyEmailViewState extends State<VerifyEmailView> {
   @override
   Widget build(BuildContext context) {
-    Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
     return Scaffold(
       appBar: AppBar(
         title: const Text("Verify email"),
@@ -29,14 +24,13 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               "If you haven't received a link yet, click here to receive it."),
           TextButton(
             onPressed: () async {
-              final user = FirebaseAuth.instance.currentUser;
-              await user?.sendEmailVerification();
+              await AuthService.firebase().sendEmailVerification();
             },
             child: const Text("Click here to get a link"),
           ),
           TextButton(
               onPressed: () async {
-                await FirebaseAuth.instance.signOut();
+                await AuthService.firebase().logOut();
                 if (context.mounted) {
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil(registerRoute, (route) => false);
