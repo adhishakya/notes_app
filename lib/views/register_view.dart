@@ -14,12 +14,15 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  late final TextEditingController _confirmPassword;
   bool _passwordVisible = true;
+  bool _confirmPasswordVisible = true;
 
   @override
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
+    _confirmPassword = TextEditingController();
     super.initState();
   }
 
@@ -27,6 +30,7 @@ class _RegisterViewState extends State<RegisterView> {
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _confirmPassword.dispose();
     super.dispose();
   }
 
@@ -74,6 +78,30 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
               ),
             ),
+            const SizedBox(height: 14),
+            SizedBox(
+              width: 360,
+              child: TextField(
+                controller: _confirmPassword,
+                obscureText: _confirmPasswordVisible,
+                enableSuggestions: false,
+                autocorrect: false,
+                decoration: InputDecoration(
+                  hintText: "Confirm Password",
+                  prefixIcon: const Icon(Icons.key),
+                  suffixIcon: IconButton(
+                    icon: Icon(_confirmPasswordVisible
+                        ? Icons.visibility_off
+                        : Icons.visibility),
+                    onPressed: () {
+                      setState(() {
+                        _confirmPasswordVisible = !_confirmPasswordVisible;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 16),
             TextButton(
                 style: const ButtonStyle(
@@ -83,23 +111,28 @@ class _RegisterViewState extends State<RegisterView> {
                 onPressed: () async {
                   final email = _email.text;
                   final password = _password.text;
-                  try {
-                    await AuthService.firebase().createUser(
-                      email: email,
-                      password: password,
-                    );
-                    AuthService.firebase().sendEmailVerification();
-                    if (context.mounted) {
-                      Navigator.of(context).pushNamed(verifyEmailRoute);
+                  final confirmPassword = _confirmPassword.text;
+                  if (password == confirmPassword) {
+                    try {
+                      await AuthService.firebase().createUser(
+                        email: email,
+                        password: password,
+                      );
+                      AuthService.firebase().sendEmailVerification();
+                      if (context.mounted) {
+                        Navigator.of(context).pushNamed(verifyEmailRoute);
+                      }
+                    } on WeakPasswordAuthException {
+                      await showErrorDialog(context, "Weak Password");
+                    } on EmailAlreadyInUseAuthException {
+                      await showErrorDialog(context, "Email already in use");
+                    } on InvalidEmailAuthException {
+                      await showErrorDialog(context, "Invalid Email Address");
+                    } on GenericAuthException {
+                      await showErrorDialog(context, "Failed to register");
                     }
-                  } on WeakPasswordAuthException {
-                    await showErrorDialog(context, "Weak Password");
-                  } on EmailAlreadyInUseAuthException {
-                    await showErrorDialog(context, "Email already in use");
-                  } on InvalidEmailAuthException {
-                    await showErrorDialog(context, "Invalid Email Address");
-                  } on GenericAuthException {
-                    await showErrorDialog(context, "Failed to register");
+                  } else {
+                    await showErrorDialog(context, "Passwords do not match");
                   }
                 },
                 child: const Text("Register")),
