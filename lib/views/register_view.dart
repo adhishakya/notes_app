@@ -51,7 +51,10 @@ class _RegisterViewState extends State<RegisterView> {
                 autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
-                    hintText: "Email Address", prefixIcon: Icon(Icons.email)),
+                  labelText: "Email Address",
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.email),
+                ),
               ),
             ),
             const SizedBox(height: 14),
@@ -63,7 +66,8 @@ class _RegisterViewState extends State<RegisterView> {
                 enableSuggestions: false,
                 autocorrect: false,
                 decoration: InputDecoration(
-                  hintText: "Password",
+                  labelText: "Email Address",
+                  border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.key),
                   suffixIcon: IconButton(
                     icon: Icon(_passwordVisible
@@ -87,7 +91,8 @@ class _RegisterViewState extends State<RegisterView> {
                 enableSuggestions: false,
                 autocorrect: false,
                 decoration: InputDecoration(
-                  hintText: "Confirm Password",
+                  labelText: "Confirm Password",
+                  border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.key),
                   suffixIcon: IconButton(
                     icon: Icon(_confirmPasswordVisible
