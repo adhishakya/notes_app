@@ -47,7 +47,10 @@ class _LoginViewState extends State<LoginView> {
                 autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
-                    hintText: "Email Address", prefixIcon: Icon(Icons.email)),
+                  labelText: "Email Address",
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.email),
+                ),
               ),
             ),
             const SizedBox(
@@ -61,7 +64,8 @@ class _LoginViewState extends State<LoginView> {
                 enableSuggestions: false,
                 autocorrect: false,
                 decoration: InputDecoration(
-                  hintText: "Password",
+                  labelText: "Password",
+                  border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.key),
                   suffixIcon: IconButton(
                     icon: Icon(_passwordVisible
