@@ -19,31 +19,49 @@ class NotesListView extends StatelessWidget {
       itemCount: notes.length,
       itemBuilder: (context, index) {
         final note = notes[index];
-        return ListTile(
-          title: Column(
-            children: [
-              Text(
-                note.title,
-                maxLines: 1,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
+        return Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 18),
+          child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              color: Color.fromARGB(255, 232, 231, 231),
+            ),
+            child: ListTile(
+              title: Padding(
+                padding: const EdgeInsets.only(
+                    left: 8, right: 8, top: 12, bottom: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      note.title,
+                      maxLines: 1,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 32),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                      note.text,
+                      maxLines: 1,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               ),
-              Text(
-                note.text,
-                maxLines: 1,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
+              trailing: IconButton(
+                onPressed: () async {
+                  final shouldDelete = await showDeleteDialog(context);
+                  if (shouldDelete) {
+                    onDeleteNote(note);
+                  }
+                },
+                icon: const Icon(Icons.delete),
               ),
-            ],
-          ),
-          trailing: IconButton(
-            onPressed: () async {
-              final shouldDelete = await showDeleteDialog(context);
-              if (shouldDelete) {
-                onDeleteNote(note);
-              }
-            },
-            icon: const Icon(Icons.delete),
+            ),
           ),
         );
       },
