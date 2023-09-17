@@ -102,6 +102,15 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create Note"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              _setupTextControllerListener();
+              Navigator.of(context).pop(context);
+            },
+            icon: const Icon(Icons.check),
+          )
+        ],
       ),
       body: FutureBuilder(
         future: createOrGetExistingNote(context),
@@ -122,7 +131,9 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
                           hintText: "Title",
                         ),
                         style: const TextStyle(
-                            fontSize: 32, fontWeight: FontWeight.w400),
+                          fontSize: 32,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                     const SizedBox(
