@@ -83,8 +83,9 @@ class _LoginViewState extends State<LoginView> {
             const SizedBox(height: 16),
             TextButton(
                 style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.purple),
-                    foregroundColor: MaterialStatePropertyAll(Colors.white)),
+                  backgroundColor: MaterialStatePropertyAll(Colors.purple),
+                  foregroundColor: MaterialStatePropertyAll(Colors.white),
+                ),
                 onPressed: () async {
                   final email = _email.text;
                   final password = _password.text;
@@ -123,6 +124,12 @@ class _LoginViewState extends State<LoginView> {
                   }
                 },
                 child: const Text("Login")),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(forgotPasswordRoute);
+              },
+              child: const Text("Forgot Password"),
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 74),
               child: Row(
