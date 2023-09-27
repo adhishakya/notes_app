@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/constants/routes.dart';
 import 'package:notes_app/services/auth/auth_service.dart';
-import 'package:notes_app/utilities/dialogs/success_dialog.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -60,13 +60,29 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   foregroundColor: MaterialStatePropertyAll(Colors.white),
                 ),
                 onPressed: () async {
+                  FocusScopeNode currentFocus = FocusScope.of(context);
+                  final emailSentConfirmation = SnackBar(
+                    content:
+                        const Text("An email has been sent for password reset"),
+                    // behavior: SnackBarBehavior.floating,
+                    action: SnackBarAction(
+                      label: "Ok",
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          loginRoute,
+                          (route) => false,
+                        );
+                      },
+                    ),
+                  );
+                  if (!currentFocus.hasPrimaryFocus) {
+                    currentFocus.unfocus();
+                  }
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(emailSentConfirmation);
                   final email = _email.text;
                   await AuthService.firebase().resetPassword(
                     email: email,
-                  );
-                  await showSuccessDialog(
-                    context,
-                    "An email has been sent for password reset",
                   );
                 },
                 child: const Text("Reset Password"),

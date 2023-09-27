@@ -12,7 +12,14 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
     title: 'Flutter Demo',
-    theme: ThemeData(primarySwatch: Colors.purple),
+    theme: ThemeData(
+      primarySwatch: Colors.purple,
+      snackBarTheme: const SnackBarThemeData(
+        contentTextStyle: TextStyle(
+          fontSize: 16,
+        ),
+      ),
+    ),
     home: const HomePage(),
     routes: {
       loginRoute: (context) => const LoginView(),
