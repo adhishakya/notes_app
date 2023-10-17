@@ -4,6 +4,7 @@ import 'package:notes_app/constants/routes.dart';
 import 'package:notes_app/services/auth/auth_exceptions.dart';
 import 'package:notes_app/services/auth/bloc/auth_bloc.dart';
 import 'package:notes_app/services/auth/bloc/auth_event.dart';
+import 'package:notes_app/services/auth/bloc/auth_state.dart';
 import 'package:notes_app/utilities/dialogs/error_dialog.dart';
 
 class LoginView extends StatefulWidget {
@@ -83,33 +84,36 @@ class _LoginViewState extends State<LoginView> {
               ),
             ),
             const SizedBox(height: 16),
-            TextButton(
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.purple),
-                  foregroundColor: MaterialStatePropertyAll(Colors.white),
-                ),
-                onPressed: () async {
-                  final email = _email.text;
-                  final password = _password.text;
-                  try {
+            BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) async {
+                if (state is AuthStateLoggedOut) {
+                  if (state.exception is UserNotFoundAuthException) {
+                    await showErrorDialog(context, "User not found.");
+                  } else if (state.exception is WrongPasswordAuthException) {
+                    await showErrorDialog(context, "Wrong Credentials.");
+                  } else if (state.exception is TooManyRequestsAuthException) {
+                    await showErrorDialog(
+                        context, "Too many unsuccessful attempts.");
+                  }
+                }
+              },
+              child: TextButton(
+                  style: const ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(Colors.purple),
+                    foregroundColor: MaterialStatePropertyAll(Colors.white),
+                  ),
+                  onPressed: () async {
+                    final email = _email.text;
+                    final password = _password.text;
                     context.read<AuthBloc>().add(
                           AuthEventLogIn(
                             email: email,
                             password: password,
                           ),
                         );
-                  } on UserNotFoundAuthException {
-                    await showErrorDialog(context, "User not found");
-                  } on WrongPasswordAuthException {
-                    await showErrorDialog(context, "Wrong credentials entered");
-                  } on TooManyRequestsAuthException {
-                    await showErrorDialog(context,
-                        "Too many failed login attempts! Try again later");
-                  } on GenericAuthException {
-                    await showErrorDialog(context, "Authentication error");
-                  }
-                },
-                child: const Text("Login")),
+                  },
+                  child: const Text("Login")),
+            ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pushNamed(forgotPasswordRoute);
