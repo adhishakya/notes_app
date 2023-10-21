@@ -18,6 +18,34 @@ class AuthEventLogIn extends AuthEvent {
   });
 }
 
+class AuthEventSendEmailVerification extends AuthEvent {
+  const AuthEventSendEmailVerification();
+}
+
+class AuthEventResetPassword extends AuthEvent {
+  final String email;
+  const AuthEventResetPassword({
+    required this.email,
+  });
+}
+
+class AuthEventShouldResetPassword extends AuthEvent {
+  const AuthEventShouldResetPassword();
+}
+
 class AuthEventLogOut extends AuthEvent {
   const AuthEventLogOut();
+}
+
+class AuthEventRegister extends AuthEvent {
+  final String email;
+  final String password;
+  const AuthEventRegister({
+    required this.email,
+    required this.password,
+  });
+}
+
+class AuthEventShouldRegister extends AuthEvent {
+  const AuthEventShouldRegister();
 }
