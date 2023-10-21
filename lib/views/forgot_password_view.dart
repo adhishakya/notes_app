@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/constants/routes.dart';
-import 'package:notes_app/services/auth/auth_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notes_app/services/auth/bloc/auth_bloc.dart';
+import 'package:notes_app/services/auth/bloc/auth_event.dart';
 
-class ForgotPasswordView extends StatefulWidget {
-  const ForgotPasswordView({super.key});
+class ResetPasswordView extends StatefulWidget {
+  const ResetPasswordView({super.key});
 
   @override
-  State<ForgotPasswordView> createState() => _ForgotPasswordViewState();
+  State<ResetPasswordView> createState() => _ResetPasswordViewState();
 }
 
-class _ForgotPasswordViewState extends State<ForgotPasswordView> {
+class _ResetPasswordViewState extends State<ResetPasswordView> {
   late final TextEditingController _email;
 
   @override
@@ -68,10 +69,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     action: SnackBarAction(
                       label: "Ok",
                       onPressed: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                          loginRoute,
-                          (route) => false,
-                        );
+                        context.read<AuthBloc>().add(
+                              const AuthEventLogOut(),
+                            );
                       },
                     ),
                   );
@@ -81,9 +81,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(emailSentConfirmation);
                   final email = _email.text;
-                  await AuthService.firebase().resetPassword(
-                    email: email,
-                  );
+                  context.read<AuthBloc>().add(
+                        AuthEventResetPassword(email: email),
+                      );
                 },
                 child: const Text("Reset Password"),
               ),
