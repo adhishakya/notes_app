@@ -24,6 +24,10 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
           const Text(
               "If you haven't received a link yet, click here to receive it."),
           TextButton(
+            style: const ButtonStyle(
+              backgroundColor: MaterialStatePropertyAll(Colors.purple),
+              foregroundColor: MaterialStatePropertyAll(Colors.white),
+            ),
             onPressed: () {
               context.read<AuthBloc>().add(
                     const AuthEventSendEmailVerification(),
@@ -37,7 +41,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                       const AuthEventLogOut(),
                     );
               },
-              child: const Text("Restart the registration process"))
+              child: const Text("Go to Login Screen"))
         ],
       ),
     );
