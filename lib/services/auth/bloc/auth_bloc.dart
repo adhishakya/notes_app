@@ -28,6 +28,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
+    //register
+    on<AuthEventShouldRegister>((event, emit) {
+      emit(const AuthStateRegistering(
+        exception: null,
+        isLoading: false,
+      ));
+    });
+
     //email verification
     on<AuthEventSendEmailVerification>(
       (event, emit) async {
@@ -63,20 +71,44 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthEventResetPassword>(
       (event, emit) async {
         final String email = event.email;
-        try {
-          await provider.resetPassword(email: email);
+
+        emit(
+          const AuthStateForgotPassword(
+            exception: null,
+            emailSent: false,
+            isLoading: false,
+          ),
+        );
+
+        // ignore: unnecessary_null_comparison
+        if (email == null) {
+          return;
+        } else {
           emit(
-            const AuthStateLoggedOut(
+            const AuthStateForgotPassword(
               exception: null,
-              isLoading: false,
+              emailSent: false,
+              isLoading: true,
             ),
           );
-        } on Exception catch (e) {
-          emit(AuthStateResettingPassword(
-            exception: e,
-            isLoading: false,
-          ));
         }
+
+        bool didSendEmail;
+        Exception? exception;
+        try {
+          await provider.resetPassword(email: email);
+          didSendEmail = true;
+        } on Exception catch (e) {
+          didSendEmail = false;
+          exception = e;
+        }
+        emit(
+          AuthStateForgotPassword(
+            exception: exception,
+            emailSent: didSendEmail,
+            isLoading: false,
+          ),
+        );
       },
     );
 
