@@ -10,6 +10,7 @@ abstract class AuthState {
     required this.isLoading,
     this.loadingText = "Please wait a moment",
   });
+  get exception => null;
 }
 
 class AuthStateUninitialized extends AuthState {
@@ -18,6 +19,7 @@ class AuthStateUninitialized extends AuthState {
 }
 
 class AuthStateRegistering extends AuthState {
+  @override
   final Exception? exception;
   const AuthStateRegistering({
     required this.exception,
@@ -36,15 +38,19 @@ class AuthStateNeedsVerification extends AuthState {
       : super(isLoading: isLoading);
 }
 
-class AuthStateResettingPassword extends AuthState {
+class AuthStateForgotPassword extends AuthState {
+  @override
   final Exception? exception;
-  const AuthStateResettingPassword({
+  final bool emailSent;
+  const AuthStateForgotPassword({
+    required this.emailSent,
     required this.exception,
     required bool isLoading,
   }) : super(isLoading: isLoading);
 }
 
 class AuthStateLoggedOut extends AuthState with EquatableMixin {
+  @override
   final Exception? exception;
   const AuthStateLoggedOut({
     required this.exception,
