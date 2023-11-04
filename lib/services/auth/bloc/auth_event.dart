@@ -29,10 +29,6 @@ class AuthEventResetPassword extends AuthEvent {
   });
 }
 
-class AuthEventShouldResetPassword extends AuthEvent {
-  const AuthEventShouldResetPassword();
-}
-
 class AuthEventLogOut extends AuthEvent {
   const AuthEventLogOut();
 }
