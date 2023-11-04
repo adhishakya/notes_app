@@ -5,7 +5,6 @@ import 'package:notes_app/services/auth/bloc/auth_bloc.dart';
 import 'package:notes_app/services/auth/bloc/auth_event.dart';
 import 'package:notes_app/services/auth/bloc/auth_state.dart';
 import 'package:notes_app/utilities/dialogs/error_dialog.dart';
-import 'package:notes_app/utilities/dialogs/loading_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -115,7 +114,7 @@ class _LoginViewState extends State<LoginView> {
               TextButton(
                 onPressed: () {
                   context.read<AuthBloc>().add(
-                        const AuthEventShouldResetPassword(),
+                        const AuthEventResetPassword(email: ""),
                       );
                 },
                 child: const Text("Forgot Password"),
